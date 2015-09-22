@@ -19,7 +19,7 @@ public class Irc {
 	public TextArea	text;
 	public TextField data;
 	Frame frame;
-	JvnObject sentence;
+	JvnObject jvnO_sentence;
 
 
   /**
@@ -55,7 +55,7 @@ public class Irc {
    @param jo the JVN object representing the Chat
    **/
 	public Irc(JvnObject jo) {
-		sentence = jo;
+		jvnO_sentence = jo;
 		frame=new Frame();
 		frame.setLayout(new GridLayout(1,1));
 		text=new TextArea(10,60);
@@ -93,13 +93,13 @@ public class Irc {
 	public void actionPerformed (ActionEvent e) {
 	 try {
 		// lock the object in read mode
-		irc.sentence.jvnLockRead();
+		irc.jvnO_sentence.jvnLockRead();
 		
 		// invoke the method
-		String s = ((Sentence)(irc.sentence.jvnGetObjectState())).read();
+		String s = ((Sentence)(irc.jvnO_sentence.jvnGetObjectState())).read();
 		
 		// unlock the object
-		irc.sentence.jvnUnLock();
+		irc.jvnO_sentence.jvnUnLock();
 		
 		// display the read value
 		irc.data.setText(s);
@@ -129,13 +129,13 @@ public class Irc {
     String s = irc.data.getText();
         	
     // lock the object in write mode
-		irc.sentence.jvnLockWrite();
+		irc.jvnO_sentence.jvnLockWrite();
 		
 		// invoke the method
-		((Sentence)(irc.sentence.jvnGetObjectState())).write(s);
+		((Sentence)(irc.jvnO_sentence.jvnGetObjectState())).write(s);
 		
 		// unlock the object
-		irc.sentence.jvnUnLock();
+		irc.jvnO_sentence.jvnUnLock();
 	 } catch (JvnException je) {
 		   System.out.println("IRC problem  : " + je.getMessage());
 	 }
