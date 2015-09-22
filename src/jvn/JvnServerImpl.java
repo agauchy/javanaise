@@ -61,8 +61,9 @@ public class JvnServerImpl
 	**/
 	public  JvnObject jvnCreateObject(Serializable o)
 	throws jvn.JvnException { 
-		// to be completed 
-		return null; 
+		JvnObjectImpl object = new JvnObjectImpl();
+		object.setObject(o);
+		return object; 
 	}
 	
 	/**
