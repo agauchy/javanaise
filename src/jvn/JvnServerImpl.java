@@ -17,6 +17,8 @@ import java.io.*;
 
 public class JvnServerImpl extends UnicastRemoteObject implements JvnLocalServer, JvnRemoteServer {
 
+	private static final long serialVersionUID = 1L;
+
 	// A JVN server is managed as a singleton
 	private static JvnServerImpl js = null;
 

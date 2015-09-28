@@ -28,23 +28,27 @@ public class Irc {
   **/
 	public static void main(String argv[]) {
 	   try {
-		   
+		   System.out.println("pouet1");
 		// initialize JVN
 		JvnServerImpl js = JvnServerImpl.jvnGetServer();
-		
+		System.out.println("pouet2");
 		// look up the IRC object in the JVN server
 		// if not found, create it, and register it in the JVN server
 		JvnObject jo = js.jvnLookupObject("IRC");
-		   
+		System.out.println("pouet3");
 		if (jo == null) {
 			jo = js.jvnCreateObject((Serializable) new Sentence());
+			System.out.println("pouet4");
 			// after creation, I have a write lock on the object
 			jo.jvnUnLock();
+			System.out.println("pouet5");
 			js.jvnRegisterObject("IRC", jo);
+			System.out.println("pouet6");
 		}
 		// create the graphical part of the Chat application
+		System.out.println("pouet7");
 		 new Irc(jo);
-	   
+		 System.out.println("pouet8");
 	   } catch (Exception e) {
 		   System.out.println("IRC problem : " + e.getMessage());
 	   }

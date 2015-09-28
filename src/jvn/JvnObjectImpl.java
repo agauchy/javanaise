@@ -6,6 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class JvnObjectImpl implements JvnObject {
 
+	private static final long serialVersionUID = 1L;
 	private Lock mutex = new ReentrantLock(true);
 	private Etat etat = Etat.WLT;
 	private int id;
@@ -16,7 +17,7 @@ public class JvnObjectImpl implements JvnObject {
 		this.id = id;
 	}
 
-	public void jvnLockRead() throws JvnException {
+	synchronized public void jvnLockRead() throws JvnException {
 		mutex.lock();
 		JvnServerImpl server;
 		switch (this.etat) {
@@ -38,7 +39,7 @@ public class JvnObjectImpl implements JvnObject {
 		}
 	}
 
-	public void jvnLockWrite() throws JvnException {
+	synchronized public void jvnLockWrite() throws JvnException {
 		mutex.lock();
 		JvnServerImpl server;
 		switch (this.etat) {
@@ -60,7 +61,7 @@ public class JvnObjectImpl implements JvnObject {
 		}
 	}
 
-	public void jvnUnLock() throws JvnException {
+	synchronized public void jvnUnLock() throws JvnException {
 		switch (this.etat) {
 		case RLT:
 			this.etat = Etat.RLC;
@@ -78,15 +79,15 @@ public class JvnObjectImpl implements JvnObject {
 		mutex.unlock();
 	}
 
-	public int jvnGetObjectId() throws JvnException {
+	synchronized public int jvnGetObjectId() throws JvnException {
 		return this.id;
 	}
 
-	public Serializable jvnGetObjectState() throws JvnException {
+	synchronized public Serializable jvnGetObjectState() throws JvnException {
 		return object;
 	}
 
-	public void jvnInvalidateReader() throws JvnException {
+	synchronized public void jvnInvalidateReader() throws JvnException {
 		mutex.lock();
 
 		switch (this.etat) {
@@ -100,7 +101,7 @@ public class JvnObjectImpl implements JvnObject {
 		mutex.unlock();
 	}
 
-	public Serializable jvnInvalidateWriter() throws JvnException {
+	synchronized public Serializable jvnInvalidateWriter() throws JvnException {
 		mutex.lock();
 
 		switch (this.etat) {
@@ -116,7 +117,7 @@ public class JvnObjectImpl implements JvnObject {
 		return object;
 	}
 
-	public Serializable jvnInvalidateWriterForReader() throws JvnException {
+	synchronized public Serializable jvnInvalidateWriterForReader() throws JvnException {
 		mutex.lock();
 
 		switch (this.etat) {
@@ -132,8 +133,12 @@ public class JvnObjectImpl implements JvnObject {
 		return object;
 	}
 
-	public void setObject(Serializable o) {
+	synchronized public void setObject(Serializable o) {
 		this.object = o;
+	}
+
+	public void setSerializable(Serializable ser) throws JvnException {
+		this.object = ser;
 	}
 
 }

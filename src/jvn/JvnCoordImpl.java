@@ -16,14 +16,17 @@ import java.io.Serializable;
 
 public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord {
 
-	private AtomicInteger future_id = new AtomicInteger(0);
+	private static final long serialVersionUID = 1L;
+
+	private AtomicInteger future_id;
 	
-	private HashMap<String, JvnObject> object_name = new HashMap<String, JvnObject>();
+	private HashMap<String, JvnObject> object_name;
+	private HashMap<Integer, String> name_id;
 
-	private HashMap<Integer, ArrayList<JvnRemoteServer>> object_readers = new HashMap<Integer, ArrayList<JvnRemoteServer>>();
-	private HashMap<Integer, ArrayList<JvnRemoteServer>> object_writers = new HashMap<Integer, ArrayList<JvnRemoteServer>>();
+	private HashMap<Integer, ArrayList<JvnRemoteServer>> object_readers;
+	private HashMap<Integer, JvnRemoteServer> object_writer;
 
-	private HashMap<JvnRemoteServer, ArrayList<JvnObject>> servers_objects = new HashMap<JvnRemoteServer, ArrayList<JvnObject>>();
+	private HashMap<JvnRemoteServer, ArrayList<JvnObject>> servers_objects;
 
 	/**
 	 * Default constructor
@@ -31,7 +34,12 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	 * @throws JvnException
 	 **/
 	private JvnCoordImpl() throws Exception {
-		// to be completed
+		this.future_id = new AtomicInteger(0);
+		this.object_name = new HashMap<String, JvnObject>();
+		this.name_id = new HashMap<Integer, String>();
+		this.object_readers = new HashMap<Integer, ArrayList<JvnRemoteServer>>();
+		this.object_writer = new HashMap<Integer, JvnRemoteServer>();
+		this.servers_objects = new HashMap<JvnRemoteServer, ArrayList<JvnObject>>();
 	}
 
 	/**
@@ -60,8 +68,8 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	public void jvnRegisterObject(String jon, JvnObject jo, JvnRemoteServer js)
 			throws java.rmi.RemoteException, jvn.JvnException {
 		object_name.put(jon, jo);
-		object_writers.put(jo.jvnGetObjectId(), new ArrayList<JvnRemoteServer>());
-		object_writers.get(jo.jvnGetObjectId()).add(js);
+		name_id.put(jo.jvnGetObjectId(), jon);
+		object_writer.put(jo.jvnGetObjectId(), null);
 		object_readers.put(jo.jvnGetObjectId(), new ArrayList<JvnRemoteServer>());
 		if(servers_objects.get(js) == null) {
 			servers_objects.put(js, new ArrayList<JvnObject>());
@@ -79,8 +87,15 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	 * @throws java.rmi.RemoteException,JvnException
 	 **/
 	public JvnObject jvnLookupObject(String jon, JvnRemoteServer js) throws java.rmi.RemoteException, jvn.JvnException {
-		// to be completed
-		return null;
+		JvnObject object = object_name.get(jon);
+		if(servers_objects.get(js) == null) {
+			servers_objects.put(js, new ArrayList<JvnObject>());
+		}
+		if(object == null) {
+			return null;
+		}
+		servers_objects.get(js).add(object);
+		return object;
 	}
 
 	/**
@@ -95,8 +110,21 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	 *             JvnException
 	 **/
 	public Serializable jvnLockRead(int joi, JvnRemoteServer js) throws java.rmi.RemoteException, JvnException {
-		// to be completed
-		return null;
+		JvnRemoteServer object_w = object_writer.get(joi);
+		Serializable new_object_value = null;
+		String name = name_id.get(joi);
+		if(object_w != null) {
+			new_object_value = js.jvnInvalidateWriterForReader(joi);
+			object_name.get(name).setSerializable(new_object_value);
+		} else {
+			new_object_value = object_name.get(name).jvnGetObjectState();
+		}
+		
+		
+		
+		object_readers.get(joi).add(js);
+		
+		return new_object_value;
 	}
 
 	/**
@@ -111,8 +139,23 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	 *             JvnException
 	 **/
 	public Serializable jvnLockWrite(int joi, JvnRemoteServer js) throws java.rmi.RemoteException, JvnException {
-		// to be completed
-		return null;
+		JvnRemoteServer object_w = object_writer.get(joi);
+		Serializable new_object_value = null;
+		String name = name_id.get(joi);
+		if(object_w != null) {
+			new_object_value = js.jvnInvalidateWriterForReader(joi);
+			object_name.get(name).setSerializable(new_object_value);
+		} else {
+			new_object_value = object_name.get(name).jvnGetObjectState();
+		}
+		
+		for(JvnRemoteServer server : object_readers.get(joi)) {
+			server.jvnInvalidateReader(joi);
+		}
+		
+		object_writer.put(joi, js);
+		
+		return new_object_value;
 	}
 
 	/**
@@ -124,6 +167,15 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	 *             JvnException
 	 **/
 	public void jvnTerminate(JvnRemoteServer js) throws java.rmi.RemoteException, JvnException {
-		// to be completed
+		for(JvnObject jo : servers_objects.get(js)) {
+			ArrayList<JvnRemoteServer> object_readers_list = object_readers.get(jo.jvnGetObjectId());
+			object_readers_list.remove(js);
+			JvnRemoteServer object_w = object_writer.get(jo.jvnGetObjectId());
+			if(object_w == js) {
+				object_writer.put(jo.jvnGetObjectId(),null);
+			}
+		}
+		
+		servers_objects.remove(js);
 	}
 }
