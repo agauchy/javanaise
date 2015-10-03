@@ -79,4 +79,7 @@ public interface JvnObject extends Serializable {
    
    public void setSerializable(Serializable ser)
      throws jvn.JvnException;
+   
+   public void setNLState()
+   throws jvn.JvnException;
 }

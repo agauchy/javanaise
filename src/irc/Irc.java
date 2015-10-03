@@ -28,27 +28,20 @@ public class Irc {
   **/
 	public static void main(String argv[]) {
 	   try {
-		   System.out.println("pouet1");
 		// initialize JVN
 		JvnServerImpl js = JvnServerImpl.jvnGetServer();
-		System.out.println("pouet2");
 		// look up the IRC object in the JVN server
 		// if not found, create it, and register it in the JVN server
 		JvnObject jo = js.jvnLookupObject("IRC");
-		System.out.println("pouet3");
 		if (jo == null) {
 			jo = js.jvnCreateObject((Serializable) new Sentence());
-			System.out.println("pouet4");
+			System.out.println(jo);
 			// after creation, I have a write lock on the object
 			jo.jvnUnLock();
-			System.out.println("pouet5");
 			js.jvnRegisterObject("IRC", jo);
-			System.out.println("pouet6");
 		}
 		// create the graphical part of the Chat application
-		System.out.println("pouet7");
 		 new Irc(jo);
-		 System.out.println("pouet8");
 	   } catch (Exception e) {
 		   System.out.println("IRC problem : " + e.getMessage());
 	   }
@@ -97,8 +90,9 @@ public class Irc {
 	public void actionPerformed (ActionEvent e) {
 	 try {
 		// lock the object in read mode
+		 System.out.println("Objet avant lock read :"+irc.jvnO_sentence);
 		irc.jvnO_sentence.jvnLockRead();
-		
+		 System.out.println("Objet apres lock read :"+irc.jvnO_sentence);
 		// invoke the method
 		String s = ((Sentence)(irc.jvnO_sentence.jvnGetObjectState())).read();
 		
@@ -133,8 +127,10 @@ public class Irc {
     String s = irc.data.getText();
         	
     // lock the object in write mode
+	 System.out.println("Objet avant lock write :"+irc.jvnO_sentence);
 		irc.jvnO_sentence.jvnLockWrite();
-		
+		 System.out.println("Objet apres lock write :"+irc.jvnO_sentence);
+
 		// invoke the method
 		((Sentence)(irc.jvnO_sentence.jvnGetObjectState())).write(s);
 		

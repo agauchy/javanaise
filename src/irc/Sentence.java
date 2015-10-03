@@ -24,5 +24,9 @@ public class Sentence implements Serializable {
 	public String read() {
 		return data;	
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Sentence [data=" + data + "]";
+	}
 }
