@@ -43,7 +43,7 @@ public class Irc {
 		// create the graphical part of the Chat application
 		 new Irc(jo);
 	   } catch (Exception e) {
-		   System.out.println("IRC problem : " + e.getMessage());
+		   e.printStackTrace();
 	   }
 	}
 

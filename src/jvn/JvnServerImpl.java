@@ -132,7 +132,6 @@ public class JvnServerImpl extends UnicastRemoteObject implements JvnLocalServer
 	public Serializable jvnLockRead(int joi) throws JvnException {
 		if (JvnCoordImpl.DEBUG) System.out.println("[SERVER] lockRead : " + joi);
 		try {
-			System.out.println("La demande de verrou en lecture a ete transmise au serveur");
 			return coord.jvnLockRead(joi, this);
 		} catch (RemoteException e) {
 			throw new JvnException("Erreur de lockread");
@@ -189,7 +188,6 @@ public class JvnServerImpl extends UnicastRemoteObject implements JvnLocalServer
 	 * @throws java.rmi.RemoteException,JvnException
 	 **/
 	public Serializable jvnInvalidateWriterForReader(int joi) throws java.rmi.RemoteException, jvn.JvnException {
-		System.out.println("je demande (serveur) a l objet de s invalider");
 		return this.objects.get(joi).jvnInvalidateWriterForReader();
 	};
 

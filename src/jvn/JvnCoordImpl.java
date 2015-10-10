@@ -117,9 +117,9 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 		JvnRemoteServer object_w = object_writer.get(joi);
 		Serializable new_object_value = null;
 		String name = name_id.get(joi);
-		System.out.println("Celui qui a l objet s apelle : " + object_w);
+		if (DEBUG) System.out.println("Celui qui a l objet s apelle : " + object_w);
 		if(object_w != null) {
-			System.out.println("Il y avait bien quelqun qui lisait dit le coord");
+			if (DEBUG) System.out.println("Il y avait bien quelqun qui lisait dit le coord");
 			if(!object_w.equals(js)) {
 				new_object_value = object_w.jvnInvalidateWriterForReader(joi);
 				object_writer.put(joi, null);
