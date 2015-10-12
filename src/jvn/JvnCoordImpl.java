@@ -153,7 +153,7 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 		JvnRemoteServer object_w = object_writer.get(joi);
 		Serializable new_object_value = null;
 		String name = name_id.get(joi);
-		if(object_w != null) {
+		if(object_w != null && !object_w.equals(js)) {
 			if (DEBUG) System.out.println("[COORD] Il y avait un writer : " + object_w);
 			new_object_value = object_w.jvnInvalidateWriter(joi);
 			if (DEBUG) System.out.println("[COORD] Je l'ai invalide");

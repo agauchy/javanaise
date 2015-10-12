@@ -49,6 +49,8 @@ public class JvnObjectImpl implements JvnObject {
 				this.etat = Etat.WLT;
 				break;
 			case RLC:
+				server = JvnServerImpl.jvnGetServer();
+				server.jvnLockWrite(this.jvnGetObjectId());
 				this.etat = Etat.WLT;
 				break;
 			case WLC:
@@ -59,7 +61,7 @@ public class JvnObjectImpl implements JvnObject {
 		}
 	}
 
-	public void jvnUnLock() throws JvnException {
+	synchronized public void jvnUnLock() throws JvnException {
 		switch (this.etat) {
 			case RLT:
 				this.etat = Etat.RLC;
@@ -90,7 +92,6 @@ public class JvnObjectImpl implements JvnObject {
 			case RLT_WLC:
 			case RLT:
 				try {
-					System.out.println("J'attends dans jvnInvalidateReader");
 					this.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
