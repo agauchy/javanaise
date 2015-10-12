@@ -1,6 +1,8 @@
-package jvn;
+package jvn.impl;
 
 import java.io.Serializable;
+
+import jvn.itf.JvnObject;
 
 public class JvnObjectImpl implements JvnObject {
 

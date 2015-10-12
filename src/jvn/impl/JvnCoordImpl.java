@@ -6,12 +6,17 @@
  * Authors: 
  */
 
-package jvn;
+package jvn.impl;
 
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import jvn.itf.JvnObject;
+import jvn.itf.JvnRemoteCoord;
+import jvn.itf.JvnRemoteServer;
+
 import java.io.Serializable;
 
 public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord {
@@ -49,7 +54,7 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	 * 
 	 * @throws java.rmi.RemoteException,JvnException
 	 **/
-	synchronized public int jvnGetObjectId() throws java.rmi.RemoteException, jvn.JvnException {
+	synchronized public int jvnGetObjectId() throws java.rmi.RemoteException, jvn.impl.JvnException {
 		return future_id.incrementAndGet();
 	}
 
@@ -67,7 +72,7 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	 * @throws java.rmi.RemoteException,JvnException
 	 **/
 	synchronized public void jvnRegisterObject(String jon, JvnObject jo, JvnRemoteServer js)
-			throws java.rmi.RemoteException, jvn.JvnException {
+			throws java.rmi.RemoteException, jvn.impl.JvnException {
 		object_name.put(jon, jo);
 		name_id.put(jo.jvnGetObjectId(), jon);
 		object_writer.put(jo.jvnGetObjectId(), js);
@@ -87,7 +92,7 @@ public class JvnCoordImpl extends UnicastRemoteObject implements JvnRemoteCoord 
 	 *            : the remote reference of the JVNServer
 	 * @throws java.rmi.RemoteException,JvnException
 	 **/
-	synchronized public JvnObject jvnLookupObject(String jon, JvnRemoteServer js) throws java.rmi.RemoteException, jvn.JvnException {
+	synchronized public JvnObject jvnLookupObject(String jon, JvnRemoteServer js) throws java.rmi.RemoteException, jvn.impl.JvnException {
 		if (DEBUG) System.out.println("[COORD] Lookup : " + jon);
 		JvnObject object = object_name.get(jon);
 		if(servers_objects.get(js) == null) {

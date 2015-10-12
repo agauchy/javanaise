@@ -6,13 +6,19 @@
  * Authors: 
  */
 
-package jvn;
+package jvn.impl;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+
+import jvn.itf.JvnLocalServer;
+import jvn.itf.JvnObject;
+import jvn.itf.JvnRemoteCoord;
+import jvn.itf.JvnRemoteServer;
+
 import java.io.*;
 
 public class JvnServerImpl extends UnicastRemoteObject implements JvnLocalServer, JvnRemoteServer {
@@ -163,7 +169,7 @@ public class JvnServerImpl extends UnicastRemoteObject implements JvnLocalServer
 	 * @return void
 	 * @throws java.rmi.RemoteException,JvnException
 	 **/
-	public void jvnInvalidateReader(int joi) throws java.rmi.RemoteException, jvn.JvnException {
+	public void jvnInvalidateReader(int joi) throws java.rmi.RemoteException, jvn.impl.JvnException {
 		this.objects.get(joi).jvnInvalidateReader();
 	};
 
@@ -175,7 +181,7 @@ public class JvnServerImpl extends UnicastRemoteObject implements JvnLocalServer
 	 * @return the current JVN object state
 	 * @throws java.rmi.RemoteException,JvnException
 	 **/
-	public Serializable jvnInvalidateWriter(int joi) throws java.rmi.RemoteException, jvn.JvnException {
+	public Serializable jvnInvalidateWriter(int joi) throws java.rmi.RemoteException, jvn.impl.JvnException {
 		return this.objects.get(joi).jvnInvalidateWriter();
 	};
 
@@ -187,7 +193,7 @@ public class JvnServerImpl extends UnicastRemoteObject implements JvnLocalServer
 	 * @return the current JVN object state
 	 * @throws java.rmi.RemoteException,JvnException
 	 **/
-	public Serializable jvnInvalidateWriterForReader(int joi) throws java.rmi.RemoteException, jvn.JvnException {
+	public Serializable jvnInvalidateWriterForReader(int joi) throws java.rmi.RemoteException, jvn.impl.JvnException {
 		return this.objects.get(joi).jvnInvalidateWriterForReader();
 	};
 

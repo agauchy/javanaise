@@ -5,9 +5,12 @@
  * Authors: 
  */
 
-package jvn;
+package jvn.itf;
 
 import java.rmi.*;
+
+import jvn.impl.JvnException;
+
 import java.io.*;
 
 
@@ -23,7 +26,7 @@ public interface JvnRemoteCoord extends Remote {
 	* @throws java.rmi.RemoteException,JvnException
 	**/
 	public int jvnGetObjectId()
-	throws java.rmi.RemoteException,jvn.JvnException; 
+	throws java.rmi.RemoteException,jvn.impl.JvnException; 
 	
 	/**
 	* Associate a symbolic name with a JVN object
@@ -33,7 +36,7 @@ public interface JvnRemoteCoord extends Remote {
 	* @throws java.rmi.RemoteException,JvnException
 	**/
 	public void jvnRegisterObject(String jon, JvnObject jo, JvnRemoteServer js)
-	throws java.rmi.RemoteException,jvn.JvnException; 
+	throws java.rmi.RemoteException,jvn.impl.JvnException; 
 	
 	/**
 	* Get the reference of a JVN object managed by a given JVN server 
@@ -42,7 +45,7 @@ public interface JvnRemoteCoord extends Remote {
 	* @throws java.rmi.RemoteException,JvnException
 	**/
 	public JvnObject jvnLookupObject(String jon, JvnRemoteServer js)
-	throws java.rmi.RemoteException,jvn.JvnException; 
+	throws java.rmi.RemoteException,jvn.impl.JvnException; 
 	
 	/**
 	* Get a Read lock on a JVN object managed by a given JVN server 

@@ -4,8 +4,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
-import jvn.JvnCoordImpl;
-import jvn.JvnRemoteCoord;
+import jvn.impl.JvnCoordImpl;
+import jvn.itf.JvnRemoteCoord;
 
 public class ServerRegistry {
 
