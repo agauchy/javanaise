@@ -19,7 +19,7 @@ public class Irc {
 	public TextArea	text;
 	public TextField data;
 	Frame frame;
-	JvnObject jvnO_sentence;
+	ISentence jvnO_sentence;
 
 
   /**
@@ -29,19 +29,13 @@ public class Irc {
 	public static void main(String argv[]) {
 	   try {
 		// initialize JVN
-		JvnServerImpl js = JvnServerImpl.jvnGetServer();
 		// look up the IRC object in the JVN server
 		// if not found, create it, and register it in the JVN server
-		JvnObject jo = js.jvnLookupObject("IRC");
-		if (jo == null) {
-			jo = js.jvnCreateObject((Serializable) new Sentence());
-			System.out.println(jo);
-			// after creation, I have a write lock on the object
-			jo.jvnUnLock();
-			js.jvnRegisterObject("IRC", jo);
-		}
+		
+		ISentence jo = (ISentence) Proxy.newInstance(new Sentence(), "IRC");
+		//jo = js.jvnCreateObject((Serializable) new Sentence());
 		// create the graphical part of the Chat application
-		 new Irc(jo);
+		 new Irc((Sentence) jo);
 	   } catch (Exception e) {
 		   e.printStackTrace();
 	   }
@@ -51,7 +45,7 @@ public class Irc {
    * IRC Constructor
    @param jo the JVN object representing the Chat
    **/
-	public Irc(JvnObject jo) {
+	public Irc(Sentence jo) {
 		jvnO_sentence = jo;
 		frame=new Frame();
 		frame.setLayout(new GridLayout(1,1));
